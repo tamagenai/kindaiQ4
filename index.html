@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>アカンサス実用基礎中国語Q4(第16~20課)</title>
+  <style>
+    .header {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      z-index: 10;
+      background-color: lemonchiffon;
+      width: 100%;
+
+
+    }
+
+    .header2 {
+
+      display: flex;
+    }
+
+    .linkurl {
+      margin-left: auto;
+    }
+
+    .Q1 {
+      display: inline-block;
+      width: 60px;
+      height: 40px;
+      cursor: pointer;
+      background-color: skyblue;
+      text-decoration: none;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 6px
+    }
+
+
+    #tangoCard {
+      display: inline-block;
+      width: 60px;
+      height: 40px;
+      cursor: pointer;
+      background-color: pink;
+      text-decoration: none;
+      text-align: center;
+      line-height: 50px;
+      border-radius: 6px
+    }
+
+    .dataContent {
+      padding-top: 180px;
+      display: block;
+    }
+
+    .dataNone {
+      display: none;
+    }
+
+    .clkBtn {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .divFlex {
+      display: flex;
+    }
+
+    .sheetSelect {
+      padding-top: 0px;
+    }
+
+    .speed {
+      padding-top: 0px;
+    }
+
+    .STOPMP3 {
+      margin-left: 10px
+    }
+
+
+    .dataDisplay {
+      display: block;
+    }
+
+    .dataNone {
+      display: none;
+    }
+    .loading {
+      position: fixed;
+      top: 100px;
+      left: 100px;
+      z-index: 99;
+      content: '';
+      display: block;
+      margin: auto;
+      width: 300px;
+      border: 4px solid #ccc;
+      border-right-color: #0AC;
+      border-radius: 100px;
+      width: 30px;
+      height: 30px;
+      background-color: white;
+      animation: rotation 0.6s linear infinite;
+    }
+
+    @keyframes rotation {
+      from {
+        transform: rotate(0);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-10px);
+
+      }
+
+      100% {
+        opacity: 1;
+        transform: none;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+  <div id="kurukuru" class="loading"></div>
+  <div class="header">
+    <div class="header2">
+      <div class="logo">
+        <h3>アカンサス実用基礎中国語Q4(第16~20課)</h3>
+
+      </div>
+      <div class="linkurl">
+        <a class="Q1" href="https://tamagenai.github.io/kindaiQ1/" title="第1課～第3課" target="_blank">Q1</a>
+        <a class="Q2" href="https://tamagenai.github.io/kindaiQ2/" title="第4課～第9課" target="_blank">Q2</a>
+        <a class="Q3" href="https://tamagenai.github.io/kindaiQ3/" title="第10課～第15課" target="_blank">Q3</a>
+        <a id="tangoCard" title="単語カードにジャンプ"
+          href="https://script.google.com/macros/s/AKfycbyGecRtNZskfX1FL-xkVPA-iA-GpoHJz2BwHSD51BxcSmysxAoyxPGYg_nwvBzUqFzj/exec"
+          target="_blank">単語</a>
+
+      </div>
+
+    </div>
+    <div class="divFlex">
+      <div class="sheetSelect">
+
+        <label for="sheet-select">シート選択：</label><select id="sheet-select" name="sheetSelect"></select>
+      </div>
+      <div class="speed">
+        <label for="speech-Speed">　　音声スピード:</label>
+
+        <select name="speechSpeed" id="speech-Speed">
+          <option value="1.0">1.0</option>
+          <option value="0.9">0.9</option>
+          <option value="0.8">0.8</option>
+          <option value="0.7">0.7</option>
+          <option value="0.6">0.6</option>
+          <option value="0.5">0.5</option>
+          <option value="1.1">1.1</option>
+          <option value="1.2">1.2</option>
+          <option value="1.3">1.3</option>
+          <option value="1.4">1.4</option>
+          <option value="1.5">1.5</option>
+          <option value="1.6">1.6</option>
+          <option value="1.7">1.7</option>
+          <option value="1.8">1.8</option>
+          <option value="1.9">1.9</option>
+          <option value="2.0">2.0</option>
+
+        </select>
+      </div>
+      <div class="STOPMP3">
+        <button id="stopMP3" onclick="fncStopMP3(this)">MP3 停止</button>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="container">
+
+    </div>
+
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- <script src="./get_post_gss.js"></script> -->
+  <script>
+    // スプレッドシート　列　定数定義
+    const END_POINT = "https://script.google.com/macros/s/AKfycbxrGAAczhIB5-Tc3R1dGVCuW6SLd52jCWkuRQszNCdANxpdPidNEIoiyM-m1F-MEwtQ/exec";
+
+    let sheetIndex;  // 現在処理中のシートのindex
+    let mp3Start = false;
+    const mp3TabAll = [];
+    let classSTOPMP3 = document.querySelector('.STOPMP3');
+    let stopMP3 = document.getElementById('stopMP3');
+    const sheetSelector = document.getElementById("sheet-select");
+    classSTOPMP3.style.display = 'none';
+    let container = document.getElementById('container');
+    let kurukuru = document.getElementById('kurukuru');
+    let music = new Audio();
+    //  mp3ファイルの再生が完了したときに呼び出される。
+    music.addEventListener("ended", () => {
+      mp3Start = false;
+      classSTOPMP3.style.display = 'none';
+
+    });
+
+    iniCSSSet();
+
+    var tdOLD;//2023/04/27追加
+    let tdOLDColor;  // 20231223 追加
+    // 23-07-04 シートが変更されたときに実行される。----------------------
+
+    let select = document.querySelector('[name="sheetSelect"]');
+
+    select.onchange = event => {
+      var selIndex = select.selectedIndex;
+      sheetIndex = selIndex;
+      console.log(select.selectedIndex);
+      var classElement = document.getElementsByClassName('dataContent');
+      for (let i = 0; i < classElement.length; i++) {
+        if (selIndex === i) {
+
+          classElement[i].classList.remove("dataNone");
+        } else {
+          classElement[i].classList.add("dataNone");
+
+        }
+
+      }
+    }
+    // mp3TabAllを作成。
+    function createMp3TabAll(sheetDatas) {
+      for (let i = 1; i < sheetDatas.length; i++) {
+        let mp3Tab = [];
+        let fileURL;
+        let splitURL;
+        for (var j = 1; j < sheetDatas[i].length; j++) {
+          // fileURL = sheetDatas[i][j][3];
+          // splitURL = fileURL.split("/");
+          // fileURL = "https://drive.google.com/uc?id=" + splitURL[5];
+          fileURL = "mp3Files/" + sheetDatas[i][j][3];
+          mp3Tab.push(fileURL);
+        }
+        mp3TabAll.push(mp3Tab);
+
+      }
+
+    }
+
+    getFromGAS();//起動時のデータ取得
+
+    //----------- 以下、関数定義--------------------------
+
+    function getFromGAS() {
+
+      $.ajax({
+        type: "GET",
+        url: END_POINT,
+        // data: { sheetNo: SHEET_NO }
+
+      }).done((result) => {        // 成功した時の処理
+        console.log("get done:" + result);
+        setSheetNames(JSON.parse(result)[0]);
+
+        // getFromGAS(1);
+        sheetDatas = JSON.parse(result);
+
+        renderSheetDatas(sheetDatas);
+        createMp3TabAll(sheetDatas);
+
+        iniCSSSet();
+        kurukuru.remove();
+      }).fail((error) => {  // 失敗した時の処理
+        alert('Error:' + JSON.stringify(error));
+
+      }).always((data) => {// 常にやる処理
+        // do something
+        // enableControlElements();
+      });
+    }
+    function setSheetNames(sheetNamesArray) {
+      sheetSelector.innerHTML = "";
+      document.createElement('option')
+      sheetNamesArray.forEach((sheetName, index) => {
+        let option = document.createElement('option');
+        option.setAttribute('value', index + 1);
+        option.innerHTML = sheetName;
+        sheetSelector.appendChild(option);
+      });
+    }
+    //
+    function renderSheetDatas(sheetDatas) {
+      let div, table, tr, td, tbody;
+      for (let i = 1; i < sheetDatas.length; i++) {
+        div = document.createElement('div');
+        div.setAttribute('class', 'dataContent');
+
+        container.appendChild(div);
+        //
+        table = document.createElement('table');
+        table.setAttribute('border', '1');
+        div.appendChild(table);
+        tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+        for (let j = 0; j < sheetDatas[i].length; j++) {
+          tr = document.createElement('tr');
+          let mphjKubun;
+          for (let k = 0; k < sheetDatas[i][j].length - 1; k++) {
+
+            if (k === 1) {
+              mphjKubun = sheetDatas[i][j][1];
+
+            } else {
+              td = document.createElement('td');
+              td.textContent = sheetDatas[i][j][k];
+              if (mphjKubun === 'm') {
+                td.setAttribute('onclick', 'speakMp3(this)');
+                td.setAttribute('class', 'clkBtn');
+                td.style.backgroundColor = "#fffacd";
+
+              } else if (mphjKubun === 'h') {
+                td.setAttribute('onclick', 'speakData(this)');
+                td.setAttribute('class', 'clkBtn');
+                td.style.backgroundColor = "#fffacd";
+
+              } else {
+
+              }
+
+            }
+
+            tr.appendChild(td);
+
+          }
+
+          tbody.appendChild(tr);
+        }
+
+        //
+
+
+      }
+    }
+    function speakMp3(param1) {
+      if (mp3Start) {
+        return;
+      }
+      if (param1 instanceof HTMLTableCellElement) {
+        mp3Start = true;
+        classSTOPMP3.style.display = 'block';
+
+        const td = param1;
+        //2023/04/27 追加　背景色
+        if (tdOLD === undefined) {
+          tdOLD = param1;
+          tdOLDColor = tdOLD.style.backgroundColor;
+        } else {
+          tdOLD.style.backgroundColor = tdOLDColor;
+          tdOLD = param1;
+
+        }
+        //2023/04/27 追加　背景色
+
+        //td の行と列の index値を取得する例
+        td.style.backgroundColor = 'cyan';//2023/04/27追加　背景色　変更可能
+        const column = td.cellIndex;
+        const tr = td.parentNode;
+        const row = tr.sectionRowIndex;
+        // println("行row="+ row +" 列column="+ column);
+        console.log("行row=" + row + " 列column=" + column);
+        console.log(td.textContent);
+        console.log(mp3TabAll[sheetIndex][row - 1]);
+        // music = new Audio(mp3TabAll[sheetIndex][row-1]);
+        music.src = mp3TabAll[sheetIndex][row - 1];
+
+        music.play();
+
+
+      }
+    }
+    //
+    function speakData(param1, param2) {
+      if (mp3Start) {
+        return;
+      }
+
+      // if (param1 instanceof HTMLTableCellElement) {
+      const td = param1;
+      //2023/04/27 追加　背景色
+      if (tdOLD === undefined) {
+        tdOLD = param1;
+        tdOLDColor = tdOLD.style.backgroundColor;
+      } else {
+        tdOLD.style.backgroundColor = tdOLDColor;
+        tdOLD = param1;
+      }
+      //2023/04/27 追加　背景色
+      td.style.backgroundColor = 'cyan';//2023/04/27追加　背景色　変更可能
+      var uttr = new SpeechSynthesisUtterance(td.textContent);
+      uttr.lang = "zh-CN"
+      uttr.rate = speakSpeedRate();
+      speechSynthesis.cancel();
+      speechSynthesis.speak(uttr);
+
+      // }
+
+    }
+    // mp3ファイル　再生ストップ
+    function fncStopMP3(parta1) {
+
+      music.pause();
+      classSTOPMP3.style.display = 'none';
+      mp3Start = false;
+
+    }
+    // イニシャル　CSS セット　　最初のシートをイニシャル画面にする。
+    function iniCSSSet() {
+      sheetIndex = 0;
+      var classElement = document.getElementsByClassName('dataContent');
+      for (let i = 1; i < classElement.length; i++) {
+        classElement[i].classList.add("dataNone");
+      }
+
+    }
+    // speak speed 調整 2023-07-04
+    function speakSpeedRate() {
+
+      let select = document.querySelector('[name="speechSpeed"]');
+
+      var rate = parseFloat(select.selectedOptions[0].value);
+      return rate;
+
+    }
+
+
+
+
+  </script>
+</body>
+
+</html>
